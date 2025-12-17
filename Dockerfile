@@ -4,6 +4,5 @@ FROM ghcr.io/ggml-org/llama.cpp:server
 ENV LLAMA_CACHE=/models
 
 EXPOSE 8080
-
-# Router mode: discover models from /models and allow switching in Web UI
+ENTRYPOINT ["llama-server"]
 CMD ["--host","0.0.0.0","--port","8080","--models-dir","/models","--models-max","1","-t","6","-c","2048"]
