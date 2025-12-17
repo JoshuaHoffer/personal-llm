@@ -1,10 +1,9 @@
 FROM ghcr.io/ggml-org/llama.cpp:server
 
-# optional: keep downloaded HF models in a persistent path
+# where llama.cpp will cache HF downloads (and router mode can discover models)
 ENV LLAMA_CACHE=/models
 
 EXPOSE 8080
 
-# -hf lets the server download/cache a GGUF from Hugging Face automatically
-# example format is documented by llama-server (repo + optional quant)
-CMD ["--host","0.0.0.0","--port","8080","--hf-repo","unsloth/Llama-3.2-1B-Instruct-GGUF:Q4_K_M","-t","6","-c","2048"]
+# Router mode: discover models from /models and allow switching in Web UI
+CMD ["--host","0.0.0.0","--port","8080","--models-dir","/models","--models-max","1","-t","6","-c","2048"]
