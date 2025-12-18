@@ -1,9 +1,13 @@
-FROM ghcr.io/ggml-org/llama.cpp:server
+FROM ollama/ollama
 
-ENV LLAMA_CACHE=/models
-RUN mkdir -p /models
+# Ollama defaults to 127.0.0.1:11434; for other containers to reach it, bind to 0.0.0.0
+ENV OLLAMA_HOST=0.0.0.0:11434
 
-EXPOSE 8080
+# Optional: keep RAM low by unloading models immediately after requests
+# (0 = no keep alive; default is 5 minutes)
+ENV OLLAMA_KEEP_ALIVE=0
 
-ENTRYPOINT ["/app/llama-server"]
-CMD ["--host","0.0.0.0","--port","8080","--models-dir","/models","--models-max","1","-t","6","-c","2048"]
+EXPOSE 11434
+
+ENTRYPOINT ["ollama"]
+CMD ["serve"]
